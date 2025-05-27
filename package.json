@@ -1,0 +1,36 @@
+{
+  "name": "@hfelge/geoserver-client-js",
+  "version": "1.0.0",
+  "description": "JavaScript client for the GeoServer REST API (modular, modern, testable)",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hfelge/geoserver-client-js.git"
+  },
+  "keywords": [
+    "geoserver",
+    "gis",
+    "rest",
+    "client",
+    "javascript",
+    "geo",
+    "api"
+  ],
+  "author": "hfelge",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hfelge/geoserver-client-js/issues"
+  },
+  "homepage": "https://github.com/hfelge/geoserver-client-js#readme",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "vitest": "^3.1.4"
+  }
+}

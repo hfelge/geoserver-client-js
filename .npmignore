@@ -1,0 +1,6 @@
+tests/
+.ddev/
+docker-compose.override.yaml
+.env*
+.vitest.*
+README-dev.md
