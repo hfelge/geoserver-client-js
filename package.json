@@ -1,5 +1,5 @@
 {
-  "name": "@hfelge/geoserver-client-js",
+  "name": "geoserver-client-js",
   "version": "1.0.0",
   "description": "JavaScript client for the GeoServer REST API (modular, modern, testable)",
   "main": "index.js",
