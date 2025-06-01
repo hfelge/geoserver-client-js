@@ -5,7 +5,8 @@ export class RoleManager {
 
     async getRoles() {
         try {
-            return await this.client.request('GET', '/rest/security/roles');
+            const response = await this.client.request('GET', '/rest/security/roles');
+            return JSON.parse(response.body);
         } catch (e) {
             if (e.statusCode === 404) return false;
             throw e;
@@ -14,7 +15,7 @@ export class RoleManager {
 
     async roleExists(roleName) {
         const roles = await this.getRoles();
-        if (!roles || !Array.isArray(roles.roles)) return false;
+        if (!roles?.roles) return false;
         return roles.roles.includes(roleName);
     }
 
@@ -40,9 +41,9 @@ export class RoleManager {
 
     async getRolesForUser(username) {
         try {
-            const res = await this.client.request('GET', `/rest/security/roles/user/${encodeURIComponent(username)}`);
-            if (!res.roles || res.roles.length === 0) return false;
-            return res;
+            const response = await this.client.request('GET', `/rest/security/roles/user/${encodeURIComponent(username)}`);
+            const data = JSON.parse(response.body);
+            return data.roles?.length ? data : false;
         } catch (e) {
             if (e.statusCode === 404) return false;
             throw e;
@@ -51,9 +52,9 @@ export class RoleManager {
 
     async getRolesForGroup(groupName) {
         try {
-            const res = await this.client.request('GET', `/rest/security/roles/group/${encodeURIComponent(groupName)}`);
-            if (!res.roles || res.roles.length === 0) return false;
-            return res;
+            const response = await this.client.request('GET', `/rest/security/roles/group/${encodeURIComponent(groupName)}`);
+            const data = JSON.parse(response.body);
+            return data.roles?.length ? data : false;
         } catch (e) {
             if (e.statusCode === 404) return false;
             throw e;
@@ -62,10 +63,7 @@ export class RoleManager {
 
     async assignRoleToUser(username, roleName) {
         try {
-            await this.client.request(
-                'POST',
-                `/rest/security/roles/role/${encodeURIComponent(roleName)}/user/${encodeURIComponent(username)}`
-            );
+            await this.client.request('POST', `/rest/security/roles/role/${encodeURIComponent(roleName)}/user/${encodeURIComponent(username)}`);
             return true;
         } catch (e) {
             if (e.statusCode === 404) return false;
@@ -75,10 +73,7 @@ export class RoleManager {
 
     async removeRoleFromUser(username, roleName) {
         try {
-            await this.client.request(
-                'DELETE',
-                `/rest/security/roles/role/${encodeURIComponent(roleName)}/user/${encodeURIComponent(username)}`
-            );
+            await this.client.request('DELETE', `/rest/security/roles/role/${encodeURIComponent(roleName)}/user/${encodeURIComponent(username)}`);
             return true;
         } catch (e) {
             if (e.statusCode === 404) return false;
@@ -88,10 +83,7 @@ export class RoleManager {
 
     async assignRoleToGroup(groupName, roleName) {
         try {
-            await this.client.request(
-                'POST',
-                `/rest/security/roles/role/${encodeURIComponent(roleName)}/group/${encodeURIComponent(groupName)}`
-            );
+            await this.client.request('POST', `/rest/security/roles/role/${encodeURIComponent(roleName)}/group/${encodeURIComponent(groupName)}`);
             return true;
         } catch (e) {
             if (e.statusCode === 404) return false;
@@ -101,10 +93,7 @@ export class RoleManager {
 
     async removeRoleFromGroup(groupName, roleName) {
         try {
-            await this.client.request(
-                'DELETE',
-                `/rest/security/roles/role/${encodeURIComponent(roleName)}/group/${encodeURIComponent(groupName)}`
-            );
+            await this.client.request('DELETE', `/rest/security/roles/role/${encodeURIComponent(roleName)}/group/${encodeURIComponent(groupName)}`);
             return true;
         } catch (e) {
             if (e.statusCode === 404) return false;

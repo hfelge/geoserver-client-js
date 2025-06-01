@@ -4,20 +4,16 @@ export class LayerManager {
     }
 
     async getLayers() {
-        try {
-            return await this.client.request('GET', '/rest/layers.json');
-        } catch (e) {
-            throw e;
-        }
+        const response = await this.client.request('GET', '/rest/layers.json');
+        return JSON.parse(response.body);
     }
 
     async getLayer(name) {
         try {
-            return await this.client.request('GET', `/rest/layers/${name}.json`);
+            const response = await this.client.request('GET', `/rest/layers/${name}.json`);
+            return JSON.parse(response.body);
         } catch (e) {
-            if (e.statusCode === 404) {
-                return false;
-            }
+            if (e.statusCode === 404) return false;
             throw e;
         }
     }
@@ -27,9 +23,7 @@ export class LayerManager {
             await this.client.request('GET', `/rest/layers/${name}.json`);
             return true;
         } catch (e) {
-            if (e.statusCode === 404) {
-                return false;
-            }
+            if (e.statusCode === 404) return false;
             throw e;
         }
     }
@@ -38,7 +32,7 @@ export class LayerManager {
         const payload = {
             layer: {
                 enabled: true,
-                defaultStyle: { name: 'default' }
+                defaultStyle: { name: 'default' },
             }
         };
 
@@ -48,10 +42,8 @@ export class LayerManager {
         } catch (e) {
             if (
                 [400, 404].includes(e.statusCode) ||
-                (e.statusCode === 500 && e.message.includes('because "original" is null'))
-            ) {
-                return false;
-            }
+                e.message.includes('because "original" is null')
+            ) return false;
             throw e;
         }
     }
@@ -65,10 +57,8 @@ export class LayerManager {
         } catch (e) {
             if (
                 [400, 404].includes(e.statusCode) ||
-                (e.statusCode === 500 && e.message.includes('because "original" is null'))
-            ) {
-                return false;
-            }
+                e.message.includes('because "original" is null')
+            ) return false;
             throw e;
         }
     }
@@ -80,9 +70,7 @@ export class LayerManager {
             await this.client.request('DELETE', `/rest/layers/${name}${query}`);
             return true;
         } catch (e) {
-            if (e.statusCode === 404) {
-                return false;
-            }
+            if (e.statusCode === 404) return false;
             throw e;
         }
     }

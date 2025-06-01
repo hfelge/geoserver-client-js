@@ -4,74 +4,62 @@ export class WorkspaceManager {
     }
 
     async getWorkspaces() {
-        try {
-            return await this.client.request('GET', '/rest/workspaces.json');
-        } catch (e) {
-            throw e;
-        }
+        const response = await this.client.request('GET', '/rest/workspaces.json');
+        return JSON.parse(response.body);
     }
 
     async getWorkspace(name) {
         try {
-            return await this.client.request('GET', `/rest/workspaces/${name}.json`);
+            const response = await this.client.request('GET', `/rest/workspaces/${name}.json`);
+            return JSON.parse(response.body);
         } catch (e) {
-            if (e.statusCode === 404) {
-                return false;
-            }
+            if (e.statusCode === 404) return false;
             throw e;
         }
     }
 
-    async workspaceExists(workspace) {
+    async workspaceExists(name) {
         try {
-            await this.client.request('GET', `/rest/workspaces/${workspace}.json`);
+            await this.client.request('GET', `/rest/workspaces/${name}.json`);
             return true;
         } catch (e) {
-            if (e.statusCode === 404) {
-                return false;
-            }
+            if (e.statusCode === 404) return false;
             throw e;
         }
     }
 
-    async createWorkspace(workspace) {
-        const payload = { workspace: { name: workspace } };
+    async createWorkspace(name) {
+        const payload = { workspace: { name } };
 
         try {
             await this.client.request('POST', '/rest/workspaces', payload);
             return true;
         } catch (e) {
-            if (e.statusCode === 409) {
-                return false;
-            }
+            if (e.statusCode === 409) return false;
             throw e;
         }
     }
 
-    async updateWorkspace(workspace, updates) {
+    async updateWorkspace(name, updates) {
         const payload = { workspace: updates };
 
         try {
-            await this.client.request('PUT', `/rest/workspaces/${workspace}`, payload);
+            await this.client.request('PUT', `/rest/workspaces/${name}`, payload);
             return true;
         } catch (e) {
-            if ([400, 404].includes(e.statusCode)) {
-                return false;
-            }
+            if ([400, 404].includes(e.statusCode)) return false;
             throw e;
         }
     }
 
-    async deleteWorkspace(workspace, recurse = false) {
+    async deleteWorkspace(name, recurse = false) {
         const query = recurse ? '?recurse=true' : '';
 
         try {
-            await this.client.request('DELETE', `/rest/workspaces/${workspace}${query}`);
+            await this.client.request('DELETE', `/rest/workspaces/${name}${query}`);
             return true;
         } catch (e) {
-            if (e.statusCode === 404) {
-                return false;
-            }
+            if (e.statusCode === 404) return false;
             throw e;
         }
     }

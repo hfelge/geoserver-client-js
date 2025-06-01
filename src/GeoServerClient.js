@@ -14,13 +14,15 @@ export class GeoServerClient {
             headers: {
                 Authorization: this.auth,
                 Accept: 'application/json',
-                ...headers
-            }
+                ...headers,
+            },
         };
 
         if (body) {
-            options.body = JSON.stringify(body);
-            options.headers['Content-Type'] = 'application/json';
+            options.body = typeof body === 'string' ? body : JSON.stringify(body);
+            if (!options.headers['Content-Type']) {
+                options.headers['Content-Type'] = 'application/json';
+            }
         }
 
         const res = await fetch(url, options);
@@ -30,10 +32,9 @@ export class GeoServerClient {
             throw new GeoServerException(res.status, resText);
         }
 
-        try {
-            return JSON.parse(resText);
-        } catch {
-            return resText;
-        }
+        return {
+            status: res.status,
+            body: resText,
+        };
     }
 }

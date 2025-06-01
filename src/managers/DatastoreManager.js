@@ -4,23 +4,16 @@ export class DatastoreManager {
     }
 
     async getDatastores(workspace) {
-        try {
-            return await this.client.request('GET', `/rest/workspaces/${workspace}/datastores.json`);
-        } catch (e) {
-            throw e;
-        }
+        const response = await this.client.request('GET', `/rest/workspaces/${workspace}/datastores.json`);
+        return JSON.parse(response.body);
     }
 
     async getDatastore(workspace, datastore) {
         try {
-            return await this.client.request(
-                'GET',
-                `/rest/workspaces/${workspace}/datastores/${datastore}.json`
-            );
+            const response = await this.client.request('GET', `/rest/workspaces/${workspace}/datastores/${datastore}.json`);
+            return JSON.parse(response.body);
         } catch (e) {
-            if (e.statusCode === 404) {
-                return false;
-            }
+            if (e.statusCode === 404) return false;
             throw e;
         }
     }
@@ -30,9 +23,7 @@ export class DatastoreManager {
             await this.client.request('GET', `/rest/workspaces/${workspace}/datastores/${datastore}.json`);
             return true;
         } catch (e) {
-            if (e.statusCode === 404) {
-                return false;
-            }
+            if (e.statusCode === 404) return false;
             throw e;
         }
     }
@@ -69,27 +60,20 @@ export class DatastoreManager {
             await this.client.request('PUT', `/rest/workspaces/${workspace}/datastores/${datastore}`, payload);
             return true;
         } catch (e) {
-            if ([400, 404].includes(e.statusCode)) {
-                return false;
-            }
+            if ([400, 404].includes(e.statusCode)) return false;
             throw e;
         }
     }
 
     async deleteDatastore(workspace, datastore, recurse = false) {
-        const path = datastore.includes('.') ? `${datastore}.xml` : datastore;
         const query = recurse ? '?recurse=true' : '';
+        const datastorePath = datastore.includes('.') ? `${datastore}.xml` : datastore;
 
         try {
-            await this.client.request(
-                'DELETE',
-                `/rest/workspaces/${workspace}/datastores/${path}${query}`
-            );
+            await this.client.request('DELETE', `/rest/workspaces/${workspace}/datastores/${datastorePath}${query}`);
             return true;
         } catch (e) {
-            if (e.statusCode === 404) {
-                return false;
-            }
+            if (e.statusCode === 404) return false;
             throw e;
         }
     }

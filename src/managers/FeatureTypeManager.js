@@ -5,10 +5,11 @@ export class FeatureTypeManager {
 
     async getFeatureTypes(workspace, datastore) {
         try {
-            return await this.client.request(
+            const response = await this.client.request(
                 'GET',
                 `/rest/workspaces/${workspace}/datastores/${datastore}/featuretypes.json`
             );
+            return response.featureTypes;
         } catch (e) {
             throw e;
         }
@@ -16,14 +17,13 @@ export class FeatureTypeManager {
 
     async getFeatureType(workspace, datastore, name) {
         try {
-            return await this.client.request(
+            const response = await this.client.request(
                 'GET',
                 `/rest/workspaces/${workspace}/datastores/${datastore}/featuretypes/${name}.json`
             );
+            return response.featureType;
         } catch (e) {
-            if (e.statusCode === 404) {
-                return false;
-            }
+            if (e.statusCode === 404) return false;
             throw e;
         }
     }
@@ -36,9 +36,7 @@ export class FeatureTypeManager {
             );
             return true;
         } catch (e) {
-            if (e.statusCode === 404) {
-                return false;
-            }
+            if (e.statusCode === 404) return false;
             throw e;
         }
     }
@@ -75,9 +73,7 @@ export class FeatureTypeManager {
             );
             return true;
         } catch (e) {
-            if ([400, 404].includes(e.statusCode)) {
-                return false;
-            }
+            if ([400, 404].includes(e.statusCode)) return false;
             throw e;
         }
     }
@@ -92,9 +88,7 @@ export class FeatureTypeManager {
             );
             return true;
         } catch (e) {
-            if (e.statusCode === 404) {
-                return false;
-            }
+            if (e.statusCode === 404) return false;
             throw e;
         }
     }

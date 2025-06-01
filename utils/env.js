@@ -12,7 +12,9 @@ export function loadEnv(envFile = '.env') {
     return {
         baseUrl: `http://${host}/geoserver`,
         user: process.env.GEOSERVER_USER,
-        password: process.env.GEOSERVER_PASSWORD
+        password: process.env.GEOSERVER_PASSWORD,
+        workspace: process.env.GEOSERVER_WORKSPACE,
+        datastore: process.env.GEOSERVER_DATASTORE,
     };
 }
 
