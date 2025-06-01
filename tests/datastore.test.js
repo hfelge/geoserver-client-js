@@ -2,9 +2,10 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { GeoServerClient } from '../src/GeoServerClient.js';
 import { WorkspaceManager } from '../src/managers/WorkspaceManager.js';
 import { DatastoreManager } from '../src/managers/DatastoreManager.js';
-import { loadEnv } from '../utils/env.js';
+import { loadEnv, getPostGISConnectionParameters } from '../utils/env.js';
 
 const { baseUrl, user, password } = loadEnv('.env.test');
+const connectionParameters = getPostGISConnectionParameters();
 
 const client = new GeoServerClient(baseUrl, user, password);
 const workspaceManager = new WorkspaceManager(client);
@@ -12,17 +13,6 @@ const datastoreManager = new DatastoreManager(client);
 
 const workspace = 'test_ws_' + Math.floor(Math.random() * 10000);
 const datastore = 'test_ds_' + Math.floor(Math.random() * 10000);
-
-const connectionParameters = {
-    host: 'host.docker.internal',
-    port: '5432',
-    database: 'geoserver',
-    user: 'geoserver',
-    passwd: 'geoserver',
-    schema: 'public',
-    exposePrimaryKeys: 'true',
-    LooseBBox: 'true'
-};
 
 describe('DatastoreManager', () => {
     beforeAll(async () => {

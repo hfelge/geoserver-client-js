@@ -1,10 +1,6 @@
 // utils/env.js
 import { config } from 'dotenv';
 
-/**
- * Läd Umgebungsvariablen und gibt konfigurierte GeoServer-Zugangsdaten zurück.
- * @param {string} envFile - z.B. '.env', '.env.test'
- */
 export function loadEnv(envFile = '.env') {
     config({ path: envFile });
 
@@ -16,6 +12,20 @@ export function loadEnv(envFile = '.env') {
     return {
         baseUrl: `http://${host}/geoserver`,
         user: process.env.GEOSERVER_USER,
-        password: process.env.GEOSERVER_PASSWORD,
+        password: process.env.GEOSERVER_PASSWORD
+    };
+}
+
+export function getPostGISConnectionParameters() {
+    return {
+        host: process.env.POSTGIS_HOST,
+        port: process.env.POSTGIS_PORT,
+        database: process.env.POSTGIS_DB,
+        user: process.env.POSTGIS_USER,
+        passwd: process.env.POSTGIS_PASSWORD,
+        schema: process.env.POSTGIS_SCHEMA,
+        exposePrimaryKeys: 'true',
+        LooseBBox: 'true',
+        dbtype: 'postgis'
     };
 }
